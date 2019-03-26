@@ -1,0 +1,49 @@
+service: malfoy
+
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: us-east-1
+  environment:
+    POSTGRES_HOST: localhost
+    POSTGRES_DB: tmystic
+    POSTGRES_USER: tmystic
+    POSTGRES_PASSWORD: tmystic
+    POSTGRES_PORT: 5432
+
+
+package:
+  individually: true
+  exclude:
+    - "**/**"
+
+
+functions:
+  malfoy:
+    handler: wsgi_handler.handler
+    events:
+      - http: ANY /
+      - http: ANY {proxy+}
+    package:
+      include:
+        - "malfoy/**"
+        - "malfoy-app.py"
+        - "!**/__pycache__/**"
+
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+
+custom:
+
+  pythonRequirements:
+    slim: true
+    dockerizePip: true
+
+  wsgi:
+    app: malfoy-app.application
+    pythonBin: python3

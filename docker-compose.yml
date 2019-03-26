@@ -1,0 +1,23 @@
+version: '3.7'
+
+# --------------------------------------------
+# Define services to use.
+# --------------------------------------------
+services:
+
+
+  pg:
+    image: postgres:11.2-alpine
+    container_name: pg
+    networks:
+      - tmystic
+    ports:
+      - "5432:5432"
+    env_file: dev.env
+
+
+# --------------------------------------------
+# Define networks to use.
+# --------------------------------------------
+networks:
+  tmystic:
